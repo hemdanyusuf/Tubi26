@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Alışveriş Listesi | Emerald Orchard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#2f1400",
+                    "primary-fixed-dim": "#00e556",
+                    "outline": "#e7f3eb",
+                    "on-tertiary-fixed-variant": "#673d18",
+                    "surface-bright": "#ffffff",
+                    "surface-container-highest": "#bacbb6",
+                    "surface": "#f6f8f6",
+                    "secondary-container": "#e7f3eb",
+                    "inverse-on-surface": "#f6f8f6",
+                    "tertiary-container": "#ffc091",
+                    "primary-fixed": "#13ec5b",
+                    "secondary-fixed": "#e7f3eb",
+                    "on-error-container": "#991b1b",
+                    "on-primary-fixed": "#0d1b12",
+                    "surface-variant": "#ffffff",
+                    "secondary": "#4c9a66",
+                    "on-surface-variant": "#4c9a66",
+                    "on-primary-fixed-variant": "#00531a",
+                    "background": "#f6f8f6",
+                    "surface-container-high": "#cfe7d7",
+                    "surface-container-low": "#f6f8f6",
+                    "on-secondary-container": "#151e14",
+                    "surface-dim": "#d2ddcd",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-surface": "#0d1b12",
+                    "error": "#ef4444",
+                    "primary-container": "#13ec5b",
+                    "surface-tint": "#13ec5b",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-fixed-dim": "#f8ba8b",
+                    "primary": "#13ec5b",
+                    "inverse-surface": "#102216",
+                    "secondary-fixed-dim": "#cfe7d7",
+                    "on-secondary-fixed-variant": "#4c9a66",
+                    "error-container": "#fee2e2",
+                    "tertiary": "#83542d",
+                    "surface-container": "#e7f3eb",
+                    "on-primary-container": "#0d1b12",
+                    "on-tertiary-container": "#7a4c27",
+                    "on-secondary-fixed": "#0d1b12",
+                    "outline-variant": "#223d2b",
+                    "tertiary-fixed": "#ffdcc4",
+                    "on-background": "#0d1b12",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "inverse-primary": "#00e556"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-shadow {
+            box-shadow: 0 10px 30px -10px rgba(19, 236, 91, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar (Desktop Shell) -->
+<aside class="hidden md:flex flex-col fixed left-0 top-0 h-full py-8 px-4 bg-[#f6f8f6] dark:bg-[#0d1b12] h-screen w-64 border-r border-[#e7f3eb] dark:border-[#1a2e21] shadow-xl shadow-[#13ec5b]/10 z-50">
+<div class="mb-10 px-4">
+<h1 class="text-2xl font-black text-[#0d1b12] dark:text-[#13ec5b] tracking-tight">Zümrüt Bahçesi</h1>
+<p class="font-manrope font-black tracking-tighter text-[#0d1b12]/40 dark:text-[#f6f8f6]/40 text-[10px] uppercase mt-1">Premium Üye</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#0d1b12]/60 dark:text-[#f6f8f6]/60 hover:text-[#13ec5b] hover:bg-[#e7f3eb] dark:hover:bg-[#1a2e21] transition-colors scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#0d1b12]/60 dark:text-[#f6f8f6]/60 hover:text-[#13ec5b] hover:bg-[#e7f3eb] dark:hover:bg-[#1a2e21] transition-colors scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-bold">Tarifler</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#0d1b12]/60 dark:text-[#f6f8f6]/60 hover:text-[#13ec5b] hover:bg-[#e7f3eb] dark:hover:bg-[#1a2e21] transition-colors scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-bold">Envanter</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#13ec5b]/10 text-[#0d1b12] dark:text-[#13ec5b] font-bold border-r-4 border-[#13ec5b] scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-bold">Alışveriş Listesi</span>
+</a>
+</nav>
+<div class="mt-auto px-4">
+<button class="w-full py-4 bg-primary text-on-primary-fixed font-black rounded-xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">add_circle</span>
+                Tarif Oluştur
+            </button>
+</div>
+</aside>
+<!-- TopNavBar (Fixed Header) -->
+<header class="w-full sticky top-0 z-40 bg-[#ffffff]/80 backdrop-blur-md dark:bg-[#0d1b12]/80 border-b border-[#e7f3eb] dark:border-[#1a2e21] flex justify-between items-center px-6 py-4 ml-0 md:ml-64 md:w-[calc(100%-16rem)]">
+<div class="flex items-center gap-4">
+<h2 class="font-manrope font-black text-2xl tracking-tighter text-on-surface">Alışveriş Listem</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex items-center bg-surface-container rounded-full px-4 py-2 w-64 border border-outline">
+<span class="material-symbols-outlined text-on-surface/40 text-xl">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full font-medium ml-2 text-on-surface" placeholder="Ürün Ara..." type="text"/>
+</div>
+<button class="hidden lg:flex items-center gap-2 bg-primary text-on-primary-fixed px-6 py-2 rounded-full font-extrabold text-xs uppercase tracking-widest hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-base">add</span>
+                Malzeme Ekle
+            </button>
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-on-surface hover:opacity-80 transition-opacity">notifications</button>
+<button class="material-symbols-outlined text-on-surface hover:opacity-80 transition-opacity">settings</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
+<img alt="Diyetisyen Profil Fotoğrafı" class="w-full h-full object-cover" data-alt="Professional portrait of a nutritionist with a warm smile, natural studio lighting, soft green background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_knsDpYwsWl8MC_kxKu7gMxrQXEYADsCZnyapdPAG7-dMihqbH7h8qW2Hn256UlIFI0nllfEJTwgKNMkSetuLHd3WnGkqFIk-xPyl4tXcvRJFvebOz_Tl-oPmsMLSifIEiCu-BqM4eE59h9DKv7sWooQIpHZGxwOEOWWazsXi4-vVhRlHFjbj3FB5I3qGhofjObSmfZgNNRRyeqGv8qGXACvPOMsyT3i_gM1Vm-aVolWpDke-UZ2eN9ryK9CmOHFojCB2ev6mCSc"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-0 md:ml-64 p-6 md:p-10 pb-32">
+<!-- Info Banner (Tonal Layering) -->
+<div class="mb-10 bg-surface-container rounded-2xl p-6 flex flex-col md:flex-row items-center gap-6 border border-primary/10">
+<div class="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+<div class="flex-1">
+<h3 class="font-black text-lg tracking-tight">Akıllı Öneriler</h3>
+<p class="text-on-surface/60 text-sm leading-relaxed max-w-2xl">
+                    Şu an listenizde 3 tariften gelen 12 eksik malzeme bulunuyor. <strong class="text-on-surface">"Fırın Somon"</strong> tarifi için tüm malzemeleri tamamlamaya sadece 2 ürün kaldı!
+                </p>
+</div>
+<button class="px-6 py-3 bg-on-surface text-surface-bright rounded-xl font-bold text-sm whitespace-nowrap hover:bg-on-surface/90 transition-colors">
+                Tarifleri İncele
+            </button>
+</div>
+<!-- Bento Grid for Categories -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Category: Sebzeler (Large Block) -->
+<section class="lg:col-span-8 space-y-4">
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">eco</span>
+<h4 class="font-black text-xl tracking-tight uppercase">Sebzeler</h4>
+</div>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface/60 text-[10px] font-black rounded-full uppercase tracking-widest">4 Madde</span>
+</div>
+<div class="bg-surface-bright rounded-2xl border border-outline editorial-shadow overflow-hidden">
+<!-- Item 1 -->
+<div class="p-4 flex items-center gap-4 hover:bg-surface-container/30 transition-colors border-b border-outline">
+<div class="relative flex items-center justify-center">
+<input class="w-6 h-6 rounded-lg border-2 border-primary/40 text-primary focus:ring-primary/20 cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex-1">
+<span class="block font-bold text-on-surface">Organik Baby Ispanak</span>
+<span class="text-[10px] font-black text-on-surface/40 uppercase tracking-wider">Fırın Mücver Tarifi İçin</span>
+</div>
+<div class="text-right">
+<span class="block font-black text-primary">500g</span>
+<span class="text-[10px] text-on-surface/40 uppercase font-bold tracking-tighter">Aciliyet: Orta</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="p-4 flex items-center gap-4 hover:bg-surface-container/30 transition-colors border-b border-outline">
+<div class="relative flex items-center justify-center">
+<input class="w-6 h-6 rounded-lg border-2 border-primary/40 text-primary focus:ring-primary/20 cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex-1">
+<span class="block font-bold text-on-surface">Cherry Domates</span>
+<span class="text-[10px] font-black text-on-surface/40 uppercase tracking-wider">Akdeniz Salatası İçin</span>
+</div>
+<div class="text-right">
+<span class="block font-black text-primary">2 Paket</span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="p-4 flex items-center gap-4 hover:bg-surface-container/30 transition-colors border-b border-outline">
+<div class="relative flex items-center justify-center">
+<input checked="" class="w-6 h-6 rounded-lg border-2 border-primary/40 text-primary focus:ring-primary/20 cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex-1 opacity-40 italic">
+<span class="block font-bold text-on-surface line-through">Avokado (Yumuşak)</span>
+<span class="text-[10px] font-black uppercase tracking-wider">Smoothie Kasesi İçin</span>
+</div>
+<div class="text-right opacity-40">
+<span class="block font-black">2 Adet</span>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="p-4 flex items-center gap-4 hover:bg-surface-container/30 transition-colors">
+<div class="relative flex items-center justify-center">
+<input class="w-6 h-6 rounded-lg border-2 border-primary/40 text-primary focus:ring-primary/20 cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex-1">
+<span class="block font-bold text-on-surface">Kırmızı Kapya Biber</span>
+<span class="text-[10px] font-black text-on-surface/40 uppercase tracking-wider">Genel İhtiyaç</span>
+</div>
+<div class="text-right">
+<span class="block font-black text-primary">3 Adet</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Category: Proteinler (Tall Block) -->
+<section class="lg:col-span-4 space-y-4">
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+<h4 class="font-black text-xl tracking-tight uppercase">Proteinler</h4>
+</div>
+</div>
+<div class="bg-surface-bright rounded-2xl border border-outline editorial-shadow divide-y divide-outline overflow-hidden">
+<div class="p-6">
+<div class="w-full h-32 rounded-xl mb-4 overflow-hidden relative group">
+<img alt="Somon" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Close-up of fresh raw salmon fillet on ice with a sprig of dill, professional seafood photography, bright natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCUbDBqiCOa7dlH5X_4K8M5isUhbiTVfqNX0VNRuEOy_3VSGqzYMstym6_mUgoZ2xyy0hnG8JRRVgFU8wMlNJ5vd5hcCGzMUQ0f6x8qkFiWQj_VoOGAlKxY4tfWDrTZe9FmBs53MXjE6YFNJefK6s3MlBCaWS3jBFxbpJ8sAbyXnT5469twdBv5nGNiOafqacXL0bWW1FXAw0xQqTJIDZ5mxRd7C_vWmcRGcFllyes2E_YA-I5Jah8Ytx5ZJyLZy-7a6bsMjkEOss"/>
+<div class="absolute top-2 right-2 px-2 py-1 bg-surface-bright/90 backdrop-blur rounded text-[10px] font-black uppercase text-on-surface">Önemli</div>
+</div>
+<div class="flex items-start justify-between mb-2">
+<div>
+<h5 class="font-black text-on-surface">Taze Somon Fleto</h5>
+<p class="text-[10px] font-black text-on-surface/40 uppercase tracking-wider">Fırın Somon Tarifi</p>
+</div>
+<span class="font-black text-primary text-sm whitespace-nowrap">400g</span>
+</div>
+<div class="flex items-center gap-2 mt-4">
+<input class="w-5 h-5 rounded border-2 border-primary/40 text-primary" type="checkbox"/>
+<span class="text-xs font-bold text-on-surface/60">Siparişe Ekle</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex items-center justify-between mb-2">
+<div>
+<h5 class="font-black text-on-surface">Serbest Gezen Tavuk Göğsü</h5>
+<p class="text-[10px] font-black text-on-surface/40 uppercase tracking-wider">Izgara Tavuk Salatası</p>
+</div>
+<span class="font-black text-primary text-sm whitespace-nowrap">600g</span>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<input class="w-5 h-5 rounded border-2 border-primary/40 text-primary" type="checkbox"/>
+<span class="text-xs font-bold text-on-surface/60">Siparişe Ekle</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Category: Süt Ürünleri (Horizontal Block) -->
+<section class="lg:col-span-12 space-y-4">
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+<h4 class="font-black text-xl tracking-tight uppercase">Süt Ürünleri &amp; Alternatifler</h4>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Item Card 1 -->
+<div class="bg-surface-bright p-5 rounded-2xl border border-outline hover:border-primary/40 transition-colors flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">opacity</span>
+</div>
+<div>
+<p class="font-bold text-on-surface leading-tight">Badem Sütü (Şekersiz)</p>
+<p class="text-[10px] font-black text-on-surface/40 uppercase tracking-wider">Kahvaltı Smoothie</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="font-black text-primary">1L</span>
+<input class="w-5 h-5 rounded border-2 border-primary/40 text-primary" type="checkbox"/>
+</div>
+</div>
+<!-- Item Card 2 -->
+<div class="bg-surface-bright p-5 rounded-2xl border border-outline hover:border-primary/40 transition-colors flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">texture</span>
+</div>
+<div>
+<p class="font-bold text-on-surface leading-tight">Yunan Yoğurdu</p>
+<p class="text-[10px] font-black text-on-surface/40 uppercase tracking-wider">Ara Öğün</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="font-black text-primary">500g</span>
+<input checked="" class="w-5 h-5 rounded border-2 border-primary/40 text-primary" type="checkbox"/>
+</div>
+</div>
+<!-- Item Card 3 -->
+<div class="bg-surface-bright p-5 rounded-2xl border border-outline hover:border-primary/40 transition-colors flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container rounded-xl flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">egg</span>
+</div>
+<div>
+<p class="font-bold text-on-surface leading-tight">Organik Yumurta</p>
+<p class="text-[10px] font-black text-on-surface/40 uppercase tracking-wider">Haftalık Stok</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="font-black text-primary">15'li</span>
+<input class="w-5 h-5 rounded border-2 border-primary/40 text-primary" type="checkbox"/>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Shell) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-[#ffffff] dark:bg-[#0d1b12] rounded-t-2xl md:hidden border-t border-[#e7f3eb] dark:border-[#1a2e21] shadow-[0_-4px_20px_rgba(19,236,91,0.15)]">
+<a class="flex flex-col items-center justify-center text-[#0d1b12]/40 dark:text-[#f6f8f6]/40 active:bg-[#13ec5b]/20 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-manrope font-bold text-[10px] uppercase">Panel</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#0d1b12]/40 dark:text-[#f6f8f6]/40 active:bg-[#13ec5b]/20 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-manrope font-bold text-[10px] uppercase">Tarifler</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#0d1b12]/40 dark:text-[#f6f8f6]/40 active:bg-[#13ec5b]/20 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-manrope font-bold text-[10px] uppercase">Envanter</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#13ec5b] text-[#0d1b12] rounded-xl px-4 py-1 scale-110 duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_basket</span>
+<span class="font-manrope font-bold text-[10px] uppercase">Liste</span>
+</a>
+</nav>
+<!-- Floating Action Button (Contextual) -->
+<button class="md:hidden fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary-fixed rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center z-40 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</body></html>

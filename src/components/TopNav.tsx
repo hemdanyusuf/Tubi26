@@ -2,7 +2,11 @@ import { Link, useLocation } from 'react-router-dom';
 import { Bell, User, UtensilsCrossed } from 'lucide-react';
 import { clsx } from 'clsx';
 
-export default function TopNav({ links }: { links: { label: string; path: string }[] }) {
+interface TopNavProps {
+  links: { label: string; path: string }[];
+}
+
+export default function TopNav({ links }: TopNavProps) {
   const location = useLocation();
 
   return (
@@ -14,7 +18,7 @@ export default function TopNav({ links }: { links: { label: string; path: string
               <div className="bg-primary p-1.5 rounded-lg">
                 <UtensilsCrossed className="w-5 h-5 text-white" />
               </div>
-              <h2 className="text-xl font-extrabold tracking-tight text-text-dark leading-tight">DiyetApp</h2>
+              <h2 className="text-xl font-extrabold tracking-tight text-text-dark leading-tight hidden sm:block">DiyetApp</h2>
             </Link>
             <nav className="hidden md:flex items-center gap-6">
               {links.map((link) => (
@@ -34,14 +38,14 @@ export default function TopNav({ links }: { links: { label: string; path: string
             </nav>
           </div>
           <div className="flex items-center gap-4">
-            <button className="p-2 rounded-full hover:bg-slate-100 text-slate-600">
+            <button className="p-2 rounded-full hover:bg-slate-100 text-slate-600 border border-transparent hover:border-slate-200 transition-all">
               <Bell className="w-5 h-5" />
             </button>
-            <button className="p-2 rounded-full hover:bg-slate-100 text-slate-600">
+            <button className="p-2 rounded-full hover:bg-slate-100 text-slate-600 border border-transparent hover:border-slate-200 transition-all">
               <User className="w-5 h-5" />
             </button>
             <div
-              className="w-8 h-8 rounded-full bg-cover bg-center border border-slate-200"
+              className="w-8 h-8 rounded-full bg-cover bg-center border border-slate-200 cursor-pointer"
               style={{
                 backgroundImage:
                   "url('https://i.pravatar.cc/150?img=32')",

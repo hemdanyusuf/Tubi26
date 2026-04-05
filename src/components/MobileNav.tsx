@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, Refrigerator } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Refrigerator, ShoppingCart } from 'lucide-react';
 import { clsx } from 'clsx';
 
 export default function MobileNav() {
@@ -8,6 +8,7 @@ export default function MobileNav() {
     { label: 'Panel', path: '/dashboard', icon: LayoutDashboard },
     { label: 'Tarifler', path: '/recipes', icon: BookOpen },
     { label: 'Envanter', path: '/inventory', icon: Refrigerator },
+    { label: 'Liste', path: '/shopping', icon: ShoppingCart },
   ];
 
   return (

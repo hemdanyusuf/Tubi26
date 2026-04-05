@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard';
 import Recipes from './pages/Recipes';
 import Inventory from './pages/Inventory';
 import Onboarding from './pages/Onboarding';
+import Shopping from './pages/Shopping';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="recipes" element={<Recipes />} />
           <Route path="inventory" element={<Inventory />} />
+          <Route path="shopping" element={<Shopping />} />
         </Route>
       </Routes>
     </BrowserRouter>
