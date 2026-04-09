@@ -5,6 +5,8 @@ import Recipes from './pages/Recipes';
 import Inventory from './pages/Inventory';
 import Onboarding from './pages/Onboarding';
 import Shopping from './pages/Shopping';
+import AddIngredient from './pages/AddIngredient';
+import Chat from './pages/Chat';
 
 export default function App() {
   return (
@@ -17,6 +19,8 @@ export default function App() {
           <Route path="recipes" element={<Recipes />} />
           <Route path="inventory" element={<Inventory />} />
           <Route path="shopping" element={<Shopping />} />
+          <Route path="add-ingredient" element={<AddIngredient />} />
+          <Route path="chat" element={<Chat />} />
         </Route>
       </Routes>
     </BrowserRouter>

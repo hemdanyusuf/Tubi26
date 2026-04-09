@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zümrüt Bahçesi - Yeni Malzeme Ekle</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#ffffff",
+                    "secondary-fixed-dim": "#cfe7d7",
+                    "primary": "#13ec5b",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#00531a",
+                    "surface-container-low": "#f6f8f6",
+                    "error": "#ef4444",
+                    "on-primary-fixed": "#0d1b12",
+                    "on-tertiary-fixed-variant": "#673d18",
+                    "surface-container-highest": "#bacbb6",
+                    "on-error-container": "#991b1b",
+                    "error-container": "#fee2e2",
+                    "on-tertiary-fixed": "#2f1400",
+                    "outline": "#e7f3eb",
+                    "primary-fixed-dim": "#00e556",
+                    "surface-dim": "#d2ddcd",
+                    "outline-variant": "#223d2b",
+                    "tertiary-fixed": "#ffdcc4",
+                    "surface-container": "#e7f3eb",
+                    "secondary": "#4c9a66",
+                    "on-primary-container": "#0d1b12",
+                    "inverse-primary": "#00e556",
+                    "tertiary-fixed-dim": "#f8ba8b",
+                    "on-background": "#0d1b12",
+                    "surface": "#f6f8f6",
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#102216",
+                    "tertiary": "#83542d",
+                    "on-tertiary-container": "#7a4c27",
+                    "secondary-fixed": "#e7f3eb",
+                    "on-secondary": "#ffffff",
+                    "surface-variant": "#ffffff",
+                    "on-surface-variant": "#4c9a66",
+                    "on-secondary-fixed": "#0d1b12",
+                    "surface-container-high": "#cfe7d7",
+                    "primary-container": "#13ec5b",
+                    "on-secondary-fixed-variant": "#4c9a66",
+                    "tertiary-container": "#ffc091",
+                    "inverse-on-surface": "#f6f8f6",
+                    "on-surface": "#0d1b12",
+                    "on-secondary-container": "#151e14",
+                    "background": "#f6f8f6",
+                    "surface-tint": "#13ec5b",
+                    "primary-fixed": "#13ec5b",
+                    "on-primary": "#ffffff",
+                    "secondary-container": "#e7f3eb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-white dark:bg-[#0d1b12] border-r border-[#e7f3eb] dark:border-[#1a2e21] shadow-xl shadow-[#13ec5b]/10 py-6 z-50 flex flex-col">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-black text-[#0d1b12] dark:text-[#f6f8f6]">Zümrüt Bahçesi</h1>
+<div class="mt-4 flex items-center gap-3">
+<img alt="Diyetisyen Profili" class="w-10 h-10 rounded-full border-2 border-primary" data-alt="professional headshot of a friendly nutritionist with glasses in a bright modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA58uFrzSbo2AWOsoVyiVS0Q_NqYCQkxANdg62SjJszYyKDERDHcoG1ST6LAYXM9jkIzASqE0n5RmD288QlPTi2HseaOJ788-8uaqR7-cBX_9imp04uLwYDPDIgTeW7yqmbqc_sRj7UUiUiHU48k-meDe_hDhW_-karFSrpbZxOxdRKaQ4jPNBbdEMFDou1j_a0i38W__VyPGHJYAZvv5KU0q38Lxh_ohwT9KKjZmu1b3g1E1Ui6SNIKsUg3e4ziL240cFrWGrXLBY"/>
+<div>
+<p class="font-bold text-xs uppercase tracking-widest text-[#0d1b12]">Diyetisyen</p>
+<p class="text-[10px] uppercase tracking-widest text-secondary font-bold">Premium Üye</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 text-[#0d1b12]/70 dark:text-[#f6f8f6]/70 px-4 py-3 mx-2 hover:bg-[#e7f3eb] dark:hover:bg-[#1a2e21] rounded-lg transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-bold text-sm uppercase tracking-widest">Envanter</span>
+</a>
+<a class="flex items-center gap-3 text-[#0d1b12]/70 dark:text-[#f6f8f6]/70 px-4 py-3 mx-2 hover:bg-[#e7f3eb] dark:hover:bg-[#1a2e21] rounded-lg transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-bold text-sm uppercase tracking-widest">Tarifler</span>
+</a>
+<a class="flex items-center gap-3 text-[#0d1b12]/70 dark:text-[#f6f8f6]/70 px-4 py-3 mx-2 hover:bg-[#e7f3eb] dark:hover:bg-[#1a2e21] rounded-lg transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-bold text-sm uppercase tracking-widest">Alışveriş Listesi</span>
+</a>
+<a class="flex items-center gap-3 text-[#0d1b12]/70 dark:text-[#f6f8f6]/70 px-4 py-3 mx-2 hover:bg-[#e7f3eb] dark:hover:bg-[#1a2e21] rounded-lg transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+<span class="font-bold text-sm uppercase tracking-widest">Beslenme Planı</span>
+</a>
+<a class="flex items-center gap-3 text-[#0d1b12]/70 dark:text-[#f6f8f6]/70 px-4 py-3 mx-2 hover:bg-[#e7f3eb] dark:hover:bg-[#1a2e21] rounded-lg transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-bold text-sm uppercase tracking-widest">Ayarlar</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full bg-primary text-on-primary-container font-black py-4 rounded-xl shadow-lg shadow-primary/30 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                YENİ ÖĞE EKLE
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-8 py-4 w-full sticky top-0 z-40 bg-[#f6f8f6] border-b border-[#e7f3eb] dark:bg-[#0d1b12] dark:border-[#1a2e21]">
+<div class="flex items-center gap-4">
+<h2 class="text-2xl font-black tracking-tighter text-[#0d1b12] dark:text-[#f6f8f6]">Yeni Malzeme Ekle</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<input class="bg-surface-container border-none rounded-full px-6 py-2 w-64 focus:ring-2 focus:ring-primary text-sm font-medium" placeholder="Hızlı ara..." type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-2 text-[#0d1b12]/40" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#0d1b12] dark:text-[#f6f8f6] cursor-pointer active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-[#0d1b12] dark:text-[#f6f8f6] cursor-pointer active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<div class="p-8 max-w-6xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: The Form -->
+<div class="lg:col-span-8 space-y-6">
+<section class="bg-surface-bright rounded-xl p-8 shadow-sm border border-outline">
+<form class="space-y-8">
+<!-- Ingredient Name -->
+<div class="relative">
+<label class="block text-[10px] font-bold uppercase tracking-widest text-secondary mb-2">Malzeme Adı</label>
+<div class="flex items-center gap-3 bg-surface-container rounded-xl p-4 ring-1 ring-inset ring-outline focus-within:ring-2 focus-within:ring-primary transition-all">
+<span class="material-symbols-outlined text-secondary" data-icon="flatware">flatware</span>
+<input class="bg-transparent border-none focus:ring-0 w-full font-semibold text-lg text-on-surface placeholder:text-on-surface/30" placeholder="Örn: Avokado, Taze Nane..." type="text"/>
+</div>
+<div class="absolute -bottom-12 left-0 flex gap-2 overflow-x-auto py-2">
+<span class="bg-surface-container text-[10px] font-bold py-1 px-3 rounded-full border border-outline cursor-pointer hover:bg-primary/10 hover:text-primary transition-colors">DOMATES</span>
+<span class="bg-surface-container text-[10px] font-bold py-1 px-3 rounded-full border border-outline cursor-pointer hover:bg-primary/10 hover:text-primary transition-colors">SALATALIK</span>
+<span class="bg-surface-container text-[10px] font-bold py-1 px-3 rounded-full border border-outline cursor-pointer hover:bg-primary/10 hover:text-primary transition-colors">TAVUK GÖĞSÜ</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+<!-- Category -->
+<div>
+<label class="block text-[10px] font-bold uppercase tracking-widest text-secondary mb-2">Kategori</label>
+<select class="w-full bg-surface-container border-none rounded-xl p-4 font-bold text-sm text-on-surface focus:ring-2 focus:ring-primary appearance-none">
+<option>Sebzeler</option>
+<option>Proteinler</option>
+<option>Süt Ürünleri</option>
+<option>Tahıllar</option>
+<option>Meyveler</option>
+<option>Baharatlar</option>
+</select>
+</div>
+<!-- Location Toggle -->
+<div>
+<label class="block text-[10px] font-bold uppercase tracking-widest text-secondary mb-2">Konum</label>
+<div class="flex bg-surface-container p-1 rounded-xl gap-1">
+<button class="flex-1 bg-primary text-on-primary-container py-3 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-md" type="button">ENVANTER</button>
+<button class="flex-1 text-on-surface/40 py-3 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-white/50 transition-colors" type="button">ALIŞVERİŞ LİSTESİ</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Quantity -->
+<div>
+<label class="block text-[10px] font-bold uppercase tracking-widest text-secondary mb-2">Miktar</label>
+<div class="flex items-center bg-surface-container rounded-xl overflow-hidden">
+<button class="px-4 py-4 hover:bg-primary/10 text-primary transition-colors" type="button">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<input class="bg-transparent border-none focus:ring-0 w-full text-center font-black text-xl" type="number" value="1"/>
+<button class="px-4 py-4 hover:bg-primary/10 text-primary transition-colors" type="button">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<!-- Unit -->
+<div>
+<label class="block text-[10px] font-bold uppercase tracking-widest text-secondary mb-2">Birim</label>
+<select class="w-full bg-surface-container border-none rounded-xl p-4 font-bold text-sm text-on-surface focus:ring-2 focus:ring-primary appearance-none">
+<option>adet</option>
+<option>kg</option>
+<option>g</option>
+<option>paket</option>
+<option>litre</option>
+<option>demet</option>
+</select>
+</div>
+</div>
+<div class="pt-6 border-t border-outline">
+<button class="w-full bg-primary text-on-primary-container font-black py-5 rounded-xl shadow-xl shadow-primary/30 hover:scale-[1.02] active:scale-95 transition-all text-lg tracking-tight" type="submit">
+                                    MALZEMEYİ KAYDET
+                                </button>
+</div>
+</form>
+</section>
+</div>
+<!-- Right Column: Frequent Items & Recently Added (Editorial Style) -->
+<div class="lg:col-span-4 space-y-6">
+<!-- Recently Added Card -->
+<section class="bg-surface-bright rounded-xl overflow-hidden shadow-lg border border-outline">
+<div class="p-6 bg-secondary-container/30 border-b border-outline">
+<h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Son Eklenenler</h3>
+</div>
+<div class="divide-y divide-outline">
+<div class="p-4 flex items-center gap-4 hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="eco">eco</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-sm text-on-surface">Kinoa</p>
+<p class="text-[10px] font-bold text-on-surface/40 uppercase tracking-widest">500 G • TAHILLAR</p>
+</div>
+<span class="material-symbols-outlined text-secondary opacity-0 group-hover:opacity-100" data-icon="add_circle">add_circle</span>
+</div>
+<div class="p-4 flex items-center gap-4 hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="egg">egg</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-sm text-on-surface">Yumurta</p>
+<p class="text-[10px] font-bold text-on-surface/40 uppercase tracking-widest">12 ADET • PROTEİNLER</p>
+</div>
+<span class="material-symbols-outlined text-secondary opacity-0 group-hover:opacity-100" data-icon="add_circle">add_circle</span>
+</div>
+</div>
+</section>
+<!-- Frequent Items (Bento Style) -->
+<section class="space-y-4">
+<h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-secondary px-2">Sık Kullanılanlar</h3>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-white p-4 rounded-xl border border-outline hover:border-primary cursor-pointer transition-all shadow-sm flex flex-col items-center text-center gap-2 group">
+<span class="material-symbols-outlined text-3xl text-primary group-hover:rotate-12 transition-transform" data-icon="water_drop">water_drop</span>
+<span class="font-bold text-xs uppercase">Süt</span>
+</div>
+<div class="bg-white p-4 rounded-xl border border-outline hover:border-primary cursor-pointer transition-all shadow-sm flex flex-col items-center text-center gap-2 group">
+<span class="material-symbols-outlined text-3xl text-primary group-hover:rotate-12 transition-transform" data-icon="nutrition">nutrition</span>
+<span class="font-bold text-xs uppercase">Elma</span>
+</div>
+<div class="bg-white p-4 rounded-xl border border-outline hover:border-primary cursor-pointer transition-all shadow-sm flex flex-col items-center text-center gap-2 group">
+<span class="material-symbols-outlined text-3xl text-primary group-hover:rotate-12 transition-transform" data-icon="bakery_dining">bakery_dining</span>
+<span class="font-bold text-xs uppercase">Ekmek</span>
+</div>
+<div class="bg-white p-4 rounded-xl border border-outline hover:border-primary cursor-pointer transition-all shadow-sm flex flex-col items-center text-center gap-2 group">
+<span class="material-symbols-outlined text-3xl text-primary group-hover:rotate-12 transition-transform" data-icon="grass">grass</span>
+<span class="font-bold text-xs uppercase">Marul</span>
+</div>
+</div>
+</section>
+<!-- Tip/Editorial Card -->
+<div class="bg-on-primary-fixed rounded-xl p-6 text-surface-bright relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 scale-150 transform rotate-12 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-6xl" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<h4 class="text-primary font-black uppercase tracking-widest text-[10px] mb-2">PROFESYONEL İPUCU</h4>
+<p class="text-sm font-medium leading-relaxed mb-4 relative z-10">Malzemelerinizi kategorize etmek, haftalık alışveriş listesi analizlerinde size %20 zaman kazandırır.</p>
+<a class="text-xs font-black border-b-2 border-primary pb-1 group-hover:text-primary transition-colors" href="#">DAHA FAZLA ÖĞREN</a>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, Refrigerator, MessageSquare, ShoppingCart, Settings, UtensilsCrossed } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Refrigerator, MessageSquare, ShoppingCart, Settings, UtensilsCrossed, PlusCircle } from 'lucide-react';
 import { clsx } from 'clsx';
 
 const links = [
@@ -9,6 +9,7 @@ const links = [
   { label: 'Mutfaktakiler', path: '/inventory', icon: Refrigerator },
   { label: 'Diyetisyen Sohbet', path: '/chat', icon: MessageSquare },
   { label: 'Alışveriş Listesi', path: '/shopping', icon: ShoppingCart },
+  { label: 'Malzeme Ekle', path: '/add-ingredient', icon: PlusCircle },
 ];
 
 export default function Sidebar({ className }: { className?: string }) {
