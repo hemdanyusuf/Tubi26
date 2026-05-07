@@ -1,30 +1,25 @@
 import 'dotenv/config';
 import express from 'express';
 import { closePool, getPool } from './db';
+import { migrate } from './migrate';
+import { createApiRouter } from './routes';
 
 const app = express();
 app.use(express.json());
 
 const PORT = Number(process.env.API_PORT) || 3001;
 
-app.get('/api/health', (_req, res) => {
-  res.json({ ok: true });
-});
+app.use('/api', createApiRouter());
 
-app.get('/api/db/health', async (_req, res) => {
+const server = app.listen(PORT, async () => {
   try {
-    const pool = await getPool();
-    const result = await pool.request().query('SELECT 1 AS ok');
-    res.json({ ok: true, mssql: result.recordset });
+    await getPool();
+    await migrate();
+    console.log(`API http://localhost:${PORT}`);
   } catch (e) {
-    console.error(e);
-    const message = e instanceof Error ? e.message : String(e);
-    res.status(500).json({ ok: false, error: message });
+    console.error('API failed to start:', e);
+    process.exit(1);
   }
-});
-
-const server = app.listen(PORT, () => {
-  console.log(`API http://localhost:${PORT}`);
 });
 
 async function shutdown() {
