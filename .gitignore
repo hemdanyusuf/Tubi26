@@ -9,3 +9,7 @@ coverage/
 *.rar
 .env*
 !.env.example
+instance/
+*.db
+__pycache__/
+*.py[cod]

@@ -1,165 +1,82 @@
-import React from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, CalendarDays, Check, PackagePlus, Search, ShoppingCart } from 'lucide-react';
+import { clsx } from 'clsx';
+import { apiAddInventory, apiAddShopping, apiGetFoods, type Food } from '../lib/api';
+import { getUserId } from '../lib/auth';
+import { ErrorState, LoadingState } from '../components/PageState';
+
+const categoryLabels: Record<string, string> = { protein: 'Protein', carb: 'Tahıl', vegetable: 'Sebze', fruit: 'Meyve', dairy: 'Süt Ürünü' };
 
 export default function AddIngredient() {
+  const navigate = useNavigate();
+  const userId = getUserId()!;
+  const [foods, setFoods] = useState<Food[]>([]);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [query, setQuery] = useState('');
+  const [quantity, setQuantity] = useState('100');
+  const [expiryDate, setExpiryDate] = useState('');
+  const [destination, setDestination] = useState<'inventory' | 'shopping'>('inventory');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    apiGetFoods().then(({ foods: values }) => { setFoods(values); setSelectedId(values[0]?.id ?? null); }).catch((err: Error) => setError(err.message)).finally(() => setLoading(false));
+  }, []);
+
+  const filtered = useMemo(() => {
+    const value = query.trim().toLocaleLowerCase('tr-TR');
+    return value ? foods.filter((food) => `${food.name} ${food.category}`.toLocaleLowerCase('tr-TR').includes(value)) : foods;
+  }, [foods, query]);
+  const selected = foods.find((food) => food.id === selectedId) ?? null;
+
+  async function submit(event: React.FormEvent) {
+    event.preventDefault(); setError(null);
+    if (!selectedId || Number(quantity) <= 0) { setError('Bir ürün seçin ve geçerli miktar girin.'); return; }
+    setSaving(true);
+    try {
+      if (destination === 'inventory') await apiAddInventory({ user_id: userId, food_id: selectedId, quantity: Number(quantity), expiry_date: expiryDate || undefined });
+      else await apiAddShopping({ user_id: userId, food_id: selectedId, quantity: Number(quantity), reason: 'Manuel eklendi' });
+      navigate(destination === 'inventory' ? '/inventory' : '/shopping');
+    } catch (err) { setError(err instanceof Error ? err.message : 'Ürün eklenemedi.'); }
+    finally { setSaving(false); }
+  }
+
+  if (loading) return <LoadingState label="Gıda kataloğu yükleniyor..." />;
+  if (error && !foods.length) return <ErrorState message={error} />;
+
   return (
-    <div className="p-4 sm:p-8 max-w-6xl mx-auto min-h-screen" style={{ backgroundColor: '#f6f8f6' }}>
-      <div className="flex items-center gap-4 mb-4">
-        <h2 className="text-xl sm:text-2xl font-black tracking-tighter text-[#0d1b12]">Yeni Malzeme Ekle</h2>
-      </div>
+    <div className="space-y-8 max-w-5xl mx-auto">
+      <div><button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-text-dark"><ArrowLeft className="w-4 h-4" /> Geri</button><h1 className="text-4xl font-extrabold tracking-tight mt-4">Malzeme Ekle</h1><p className="mt-2 text-slate-500">Katalogdan ürün seçip envanterine veya alışveriş listene ekle.</p></div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: The Form */}
-        <div className="lg:col-span-8">
-          <section className="bg-white rounded-xl p-6 sm:p-8 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] border border-[#e7f3eb]">
-            <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
-              {/* Ingredient Name */}
-              <div className="relative">
-                <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-[#4c9a66] mb-3">Malzeme Adı</label>
-                <div className="flex items-center gap-3 bg-[#e7f3eb]/40 rounded-xl p-4 ring-1 ring-inset ring-[#e7f3eb] focus-within:ring-2 focus-within:ring-[#13ec5b] transition-all">
-                  <span className="material-symbols-outlined text-[#4c9a66]">restaurant</span>
-                  <input 
-                    type="text" 
-                    className="bg-transparent border-none focus:ring-0 w-full font-semibold text-lg text-[#0d1b12] placeholder:text-[#a0aec0] outline-none" 
-                    placeholder="Örn: Avokado, Taze Nane..." 
-                  />
-                </div>
-                <div className="flex flex-wrap gap-2 py-3 mt-1">
-                  <span className="bg-[#e7f3eb]/40 text-[10px] text-[#0d1b12] font-extrabold py-1.5 px-3 rounded-full border border-[#e7f3eb] cursor-pointer hover:bg-[#13ec5b]/10 hover:text-[#0d1b12] hover:border-[#13ec5b]/30 transition-colors uppercase">DOMATES</span>
-                  <span className="bg-[#e7f3eb]/40 text-[10px] text-[#0d1b12] font-extrabold py-1.5 px-3 rounded-full border border-[#e7f3eb] cursor-pointer hover:bg-[#13ec5b]/10 hover:text-[#0d1b12] hover:border-[#13ec5b]/30 transition-colors uppercase">SALATALIK</span>
-                  <span className="bg-[#e7f3eb]/40 text-[10px] text-[#0d1b12] font-extrabold py-1.5 px-3 rounded-full border border-[#e7f3eb] cursor-pointer hover:bg-[#13ec5b]/10 hover:text-[#0d1b12] hover:border-[#13ec5b]/30 transition-colors uppercase">TAVUK GÖĞSÜ</span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
-                {/* Category */}
-                <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-[#4c9a66] mb-3">Kategori</label>
-                  <div className="relative">
-                    <select className="w-full bg-[#e7f3eb]/40 border border-[#e7f3eb] rounded-xl p-4 font-bold text-sm text-[#0d1b12] focus:ring-2 focus:ring-[#13ec5b] appearance-none cursor-pointer outline-none">
-                      <option>Sebzeler</option>
-                      <option>Proteinler</option>
-                      <option>Süt Ürünleri</option>
-                      <option>Tahıllar</option>
-                      <option>Meyveler</option>
-                      <option>Baharatlar</option>
-                    </select>
-                    <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#4c9a66] pointer-events-none">expand_more</span>
-                  </div>
-                </div>
-                {/* Location Toggle */}
-                <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-[#4c9a66] mb-3">Konum</label>
-                  <div className="flex bg-[#e7f3eb]/40 p-1.5 rounded-xl gap-1 border border-[#e7f3eb]">
-                    <button type="button" className="flex-1 bg-[#13ec5b] text-[#0d1b12] py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-sm">ENVANTER</button>
-                    <button type="button" className="flex-1 text-[#4c9a66] font-bold py-2.5 rounded-lg text-[10px] uppercase tracking-widest hover:bg-white/60 transition-colors">ALIŞVERİŞ LİSTESİ</button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Quantity */}
-                <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-[#4c9a66] mb-3">Miktar</label>
-                  <div className="flex items-center bg-[#e7f3eb]/40 rounded-xl overflow-hidden border border-[#e7f3eb]">
-                    <button type="button" className="px-5 py-3 hover:bg-[#13ec5b]/10 text-[#4c9a66] transition-colors font-black">
-                      <span className="material-symbols-outlined text-[#13ec5b]">remove</span>
-                    </button>
-                    <input 
-                      type="number" 
-                      className="bg-transparent border-none focus:ring-0 w-full text-center font-black text-xl text-[#0d1b12] outline-none" 
-                      defaultValue="1" 
-                    />
-                    <button type="button" className="px-5 py-3 hover:bg-[#13ec5b]/10 text-[#4c9a66] transition-colors font-black">
-                      <span className="material-symbols-outlined text-[#13ec5b]">add</span>
-                    </button>
-                  </div>
-                </div>
-                {/* Unit */}
-                <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-[0.1em] text-[#4c9a66] mb-3">Birim</label>
-                  <div className="relative">
-                    <select className="w-full bg-[#e7f3eb]/40 border border-[#e7f3eb] rounded-xl p-4 font-bold text-sm text-[#0d1b12] focus:ring-2 focus:ring-[#13ec5b] appearance-none cursor-pointer outline-none">
-                      <option>adet</option>
-                      <option>kg</option>
-                      <option>g</option>
-                      <option>paket</option>
-                      <option>litre</option>
-                      <option>demet</option>
-                    </select>
-                    <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#4c9a66] pointer-events-none">expand_more</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-6">
-                <button type="submit" className="w-full bg-[#13ec5b] text-[#0d1b12] font-black py-4 rounded-xl shadow-[0_8px_20px_-6px_rgba(19,236,91,0.4)] hover:scale-[1.01] active:scale-[0.98] transition-transform text-sm tracking-tight uppercase">
-                  MALZEMEYİ KAYDET
-                </button>
-              </div>
-            </form>
-          </section>
-        </div>
-
-        {/* Right Column: Frequent Items & Recently Added */}
-        <div className="lg:col-span-4 space-y-6">
-          {/* Recently Added Card */}
-          <section className="bg-white rounded-xl overflow-hidden shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] border border-[#e7f3eb]">
-            <div className="p-4 bg-transparent border-b border-[#e7f3eb]">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.15em] text-[#4c9a66]">Son Eklenenler</h3>
-            </div>
-            <div className="divide-y divide-[#e7f3eb]">
-              <div className="p-4 flex items-center gap-4 hover:bg-[#f6f8f6] transition-colors group cursor-pointer">
-                <div className="w-10 h-10 rounded-lg bg-[#e7f3eb]/50 flex items-center justify-center text-[#13ec5b] group-hover:scale-105 transition-transform">
-                  <span className="material-symbols-outlined">eco</span>
-                </div>
-                <div className="flex-1">
-                  <p className="font-extrabold text-sm text-[#0d1b12]">Kinoa</p>
-                  <p className="text-[9px] font-extrabold text-[#a0aec0] uppercase tracking-widest mt-0.5">500 G • TAHILLAR</p>
-                </div>
-              </div>
-              <div className="p-4 flex items-center gap-4 hover:bg-[#f6f8f6] transition-colors group cursor-pointer">
-                <div className="w-10 h-10 rounded-lg bg-[#e7f3eb]/50 flex items-center justify-center text-[#13ec5b] group-hover:scale-105 transition-transform">
-                  <span className="material-symbols-outlined">egg</span>
-                </div>
-                <div className="flex-1">
-                  <p className="font-extrabold text-sm text-[#0d1b12]">Yumurta</p>
-                  <p className="text-[9px] font-extrabold text-[#a0aec0] uppercase tracking-widest mt-0.5">12 ADET • PROTEİNLER</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Frequent Items */}
-          <section className="space-y-3">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.15em] text-[#4c9a66] px-1">Sık Kullanılanlar</h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-white p-4 rounded-xl border border-[#e7f3eb] hover:border-[#13ec5b] cursor-pointer transition-all shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] flex flex-col items-center text-center gap-2 group">
-                <span className="material-symbols-outlined text-2xl text-[#13ec5b] group-hover:scale-110 transition-transform">water_drop</span>
-                <span className="font-black text-[11px] uppercase text-[#0d1b12]">Süt</span>
-              </div>
-              <div className="bg-white p-4 rounded-xl border border-[#e7f3eb] hover:border-[#13ec5b] cursor-pointer transition-all shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] flex flex-col items-center text-center gap-2 group">
-                <span className="material-symbols-outlined text-2xl text-[#13ec5b] group-hover:scale-110 transition-transform">nutrition</span>
-                <span className="font-black text-[11px] uppercase text-[#0d1b12]">Elma</span>
-              </div>
-              <div className="bg-white p-4 rounded-xl border border-[#e7f3eb] hover:border-[#13ec5b] cursor-pointer transition-all shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] flex flex-col items-center text-center gap-2 group">
-                <span className="material-symbols-outlined text-2xl text-[#13ec5b] group-hover:scale-110 transition-transform">bakery_dining</span>
-                <span className="font-black text-[11px] uppercase text-[#0d1b12]">Ekmek</span>
-              </div>
-              <div className="bg-white p-4 rounded-xl border border-[#e7f3eb] hover:border-[#13ec5b] cursor-pointer transition-all shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] flex flex-col items-center text-center gap-2 group">
-                <span className="material-symbols-outlined text-2xl text-[#13ec5b] group-hover:scale-110 transition-transform">grass</span>
-                <span className="font-black text-[11px] uppercase text-[#0d1b12]">Marul</span>
-              </div>
-            </div>
-          </section>
-
-          {/* Tip Card */}
-          <div className="bg-[#0d1b12] rounded-xl p-5 text-white relative overflow-hidden group shadow-lg">
-            <h4 className="text-[#13ec5b] font-black uppercase tracking-widest text-[9px] mb-2">PROFESYONEL İPUCU</h4>
-            <p className="text-[13px] font-medium leading-relaxed mb-4 relative z-10 text-white/90">Malzemelerinizi kategorize etmek, haftalık alışveriş listesi analizlerinde size %20 zaman kazandırır.</p>
-            <a href="#" className="inline-block text-[10px] font-black text-white border-b-2 border-[#13ec5b] pb-0.5 hover:text-[#13ec5b] transition-colors uppercase">DAHA FAZLA ÖĞREN</a>
+      <form onSubmit={submit} className="grid lg:grid-cols-5 gap-6">
+        <section className="lg:col-span-3 bg-white rounded-2xl border border-border-light shadow-sm overflow-hidden">
+          <div className="p-5 border-b border-border-light"><div className="relative"><Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Katalogda ara..." className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-primary" /></div></div>
+          <div className="max-h-[520px] overflow-y-auto custom-scrollbar divide-y divide-border-light">
+            {filtered.map((food) => (
+              <button key={food.id} type="button" onClick={() => setSelectedId(food.id)} className={clsx('w-full p-4 flex items-center gap-4 text-left hover:bg-background-light transition-colors', selectedId === food.id && 'bg-primary/5')}>
+                <div className={clsx('w-10 h-10 rounded-xl flex items-center justify-center', selectedId === food.id ? 'bg-primary' : 'bg-slate-100')}><PackagePlus className="w-5 h-5" /></div>
+                <div className="flex-1"><p className="font-bold">{food.name}</p><p className="text-xs text-slate-500">{categoryLabels[food.category] ?? food.category} · {food.calories_per_100g} kcal / 100 g</p></div>
+                {selectedId === food.id && <Check className="w-5 h-5 text-primary-hover" />}
+              </button>
+            ))}
+            {!filtered.length && <p className="p-12 text-center text-sm text-slate-500">Aramana uygun ürün bulunamadı.</p>}
           </div>
-        </div>
-      </div>
+        </section>
+
+        <section className="lg:col-span-2 bg-white rounded-2xl border border-border-light shadow-sm p-6 h-fit space-y-6 lg:sticky lg:top-6">
+          <div><p className="text-xs font-bold text-primary-hover uppercase">Seçilen ürün</p><h2 className="text-2xl font-black mt-1">{selected?.name ?? 'Ürün seçin'}</h2>{selected && <p className="text-sm text-slate-500 mt-1">Protein {selected.protein_per_100g} g · Karbonhidrat {selected.carbs_per_100g} g · Yağ {selected.fat_per_100g} g</p>}</div>
+          <div className="grid grid-cols-2 gap-2">
+            <button type="button" onClick={() => setDestination('inventory')} className={clsx('p-3 rounded-xl border text-sm font-bold flex flex-col items-center gap-2', destination === 'inventory' ? 'border-primary bg-primary/10' : 'border-slate-200')}><PackagePlus className="w-5 h-5" /> Envanter</button>
+            <button type="button" onClick={() => setDestination('shopping')} className={clsx('p-3 rounded-xl border text-sm font-bold flex flex-col items-center gap-2', destination === 'shopping' ? 'border-primary bg-primary/10' : 'border-slate-200')}><ShoppingCart className="w-5 h-5" /> Alışveriş</button>
+          </div>
+          <label className="block space-y-2"><span className="text-xs font-bold uppercase text-slate-500">Miktar (gram)</span><input required type="number" min="0.1" step="0.1" value={quantity} onChange={(e) => setQuantity(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:ring-2 focus:ring-primary" /></label>
+          {destination === 'inventory' && <label className="block space-y-2"><span className="text-xs font-bold uppercase text-slate-500 flex items-center gap-1"><CalendarDays className="w-4 h-4" /> Son kullanma tarihi</span><input type="date" value={expiryDate} onChange={(e) => setExpiryDate(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:ring-2 focus:ring-primary" /></label>}
+          {error && <p role="alert" className="p-3 rounded-xl bg-rose-50 text-rose-600 text-sm font-semibold">{error}</p>}
+          <button disabled={saving || !selected} className="w-full py-3.5 bg-primary hover:bg-primary-hover disabled:opacity-50 rounded-xl font-black shadow-lg shadow-primary/20">{saving ? 'Ekleniyor...' : destination === 'inventory' ? 'Envantere Ekle' : 'Listeye Ekle'}</button>
+        </section>
+      </form>
     </div>
   );
 }

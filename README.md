@@ -1,59 +1,63 @@
+# Tubi26 — Akıllı Mutfak ve Beslenme Asistanı
 
+Tubi26, evdeki gıdaları takip eden, mevcut malzemelere göre tarifleri sıralayan ve eksikleri otomatik alışveriş listesine dönüştüren full-stack bir uygulamadır. React arayüzü ile Flask API aynı repository içinde çalışır; uygulama verilerini SQLAlchemy ve SQLite saklar.
 
-# Tubi26 — Akıllı Mutfak & Tarif Asistanı
+## Çalışan özellikler
 
-Tubi26; **mutfak envanterini** (evde ne var?), **alışveriş listesini** ve **yapay zekâ destekli tarif önerilerini** tek yerde toplayan bir web uygulaması.
+- Kişisel profil ve günlük kalori hedefi hesaplama
+- Gıda kataloğundan envantere ürün ekleme, arama ve silme
+- Envanter miktarına göre yapılabilir tarif ve eksik malzeme hesabı
+- Tarif eksiklerinden otomatik, ayrıca manuel alışveriş listesi oluşturma
+- Alışveriş maddelerini tamamlama ve silme
+- Günlük kalori, envanter ve yaklaşan son kullanma tarihi özeti
+- Envanter bağlamını kullanan sohbet asistanı
+- Gemini anahtarı yoksa çalışan yerel ve deterministik sohbet yanıtları
 
-## Öne çıkanlar
+## Teknolojiler
 
-- **Tarif asistanı (Gemini)**: Elindeki malzemeler ve hedef kaloriye göre tarif önerir.
-- **Envanter & alışveriş**: Malzeme yönetimi ve liste akışı için ekranlar.
-- **Backend API (Express)**: `/api/*` altında uçlar.
-- **Veritabanı (MSSQL)**: SQL Server bağlantısı için hazır altyapı ve sağlık kontrolü.
+- Frontend: React 19, TypeScript, Vite, Tailwind CSS, Recharts
+- Backend: Python, Flask, Flask-SQLAlchemy
+- Veritabanı: SQLite (SQLAlchemy üzerinden değiştirilebilir)
+- İsteğe bağlı yapay zekâ: Google Gemini, yalnızca sunucu tarafında
 
-## Teknoloji
+## Yerel kurulum
 
-- **Frontend**: React + TypeScript + Vite + Tailwind
-- **Backend**: Node.js + Express
-- **DB**: Microsoft SQL Server (`mssql`)
+Gereksinimler: Node.js 20+, Python 3.10+.
 
-## Kurulum (yerel)
+```bash
+npm run setup
+```
 
-## Run Locally
+İsteğe bağlı olarak `.env.example` dosyasını `.env` adıyla kopyalayın. Gemini kullanılacaksa `GOOGLE_API_KEY` değerini yalnızca bu dosyada tutun. Anahtar olmadan da uygulama çalışır.
 
-**Önkoşullar:** Node.js (LTS önerilir)
+## Geliştirme
 
-1. Bağımlılıkları kur:
+Tek komut iki katmanı birlikte başlatır:
 
-   `npm install`
+```bash
+npm run dev
+```
 
-2. Ortam dosyasını oluştur:
+- Arayüz: http://localhost:3000
+- API sağlık kontrolü: http://localhost:5000/api/health
 
-   - `.env.example` → `.env` kopyala
-   - Gerekli değişkenleri doldur:
-     - **Gemini**: `VITE_GEMINI_API_KEY`
-     - **API**: `API_PORT` (varsayılan `3001`)
-     - **MSSQL**: `MSSQL_SERVER`, `MSSQL_DATABASE` (+ gerekiyorsa `MSSQL_USER` / `MSSQL_PASSWORD`)
+İlk başlangıçta SQLite tabloları ve örnek gıda/tarif verileri otomatik oluşturulur.
 
-3. API’yi çalıştır (ayrı terminal):
+## Production benzeri çalışma
 
-   `npm run server`
+```bash
+npm run build
+npm start
+```
 
-4. UI’ı çalıştır:
+Flask, oluşan `dist/` klasöründeki React uygulamasını ve `/api/*` uçlarını http://localhost:5000 üzerinden birlikte sunar.
 
-   `npm run dev`
+## Yapı
 
-Uygulama: `http://localhost:3000`  
-API sağlık: `GET /api/health`  
-DB sağlık: `GET /api/db/health`
+```text
+backend/          Flask API, SQLAlchemy modelleri ve seed verileri
+src/              React + TypeScript arayüzü
+requirements.txt  Python bağımlılıkları
+```
 
-## Notlar
-
-- **Gizli anahtarları commit’leme**: `.env` dosyası repoya dahil edilmez.
-- Repo kökünde tasarım çıktıları `docs/` altında tutulur.
-
-1. Install dependencies:
-   `npm install`
-2. Set the `VITE_GEMINI_API_KEY` in `.env` to your Gemini API key
-3. Run the app:
-   `npm run dev`
+`.env`, yerel SQLite veritabanı ve build çıktıları Git'e eklenmez. Bu uygulama tıbbi tavsiye vermez; kalori değerleri yaklaşık değerlerdir.

@@ -1,171 +1,103 @@
-import { Search, Plus, Droplets, EggFried, IceCream, Egg, Leaf, Carrot, Beef, Fish, Edit2, Trash2, Sparkles } from 'lucide-react';
-import { clsx } from 'clsx';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { AlertTriangle, CalendarDays, PackageOpen, Plus, Search, Sparkles, Trash2 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { apiDeleteInventory, apiGetInventory, type InventoryItem } from '../lib/api';
+import { getUserId } from '../lib/auth';
+import { ErrorState, LoadingState } from '../components/PageState';
 
-const categories = [
-  { id: 'all', label: 'Hepsi', active: true },
-  { id: 'dairy', label: 'Süt Ürünleri', active: false },
-  { id: 'veggies', label: 'Sebzeler', active: false },
-  { id: 'proteins', label: 'Proteinler', active: false },
-  { id: 'grains', label: 'Tahıllar', active: false },
-];
-
-const inventory = {
-  dairy: {
-    title: 'Süt Ürünleri',
-    icon: EggFried,
-    count: 4,
-    items: [
-      { id: 1, name: 'Süt', amount: '1.5 L', freshness: 75, icon: Droplets, color: 'text-primary', bg: 'bg-primary/20', status: 'Tazelik: %75' },
-      { id: 2, name: 'Peynir', amount: '200 g', freshness: 20, icon: EggFried, color: 'text-orange-500', bg: 'bg-orange-100', status: 'Azalıyor!', isLow: true },
-      { id: 3, name: 'Yoğurt', amount: '500 g', freshness: 90, icon: IceCream, color: 'text-primary', bg: 'bg-primary/20', status: 'Tazelik: %90' },
-      { id: 4, name: 'Yumurta', amount: '12 Adet', freshness: 100, icon: Egg, color: 'text-primary', bg: 'bg-primary/20', status: 'Tazelik: %100' },
-    ]
-  },
-  veggies: {
-    title: 'Sebzeler',
-    icon: Leaf,
-    count: 3,
-    items: [
-      { id: 5, name: 'Domates', amount: '5 Adet', freshness: 60, icon: Leaf, color: 'text-primary', bg: 'bg-primary/20', status: 'Tazelik: %60' },
-      { id: 6, name: 'Ispanak', amount: '1 Bağ', freshness: 40, icon: Leaf, color: 'text-primary', bg: 'bg-primary/20', status: 'Tazelik: %40' },
-      { id: 7, name: 'Havuç', amount: '2 Adet', freshness: 10, icon: Carrot, color: 'text-red-500', bg: 'bg-red-100', status: 'Tükeniyor!', isLow: true, isCritical: true },
-    ]
-  },
-  proteins: {
-    title: 'Proteinler',
-    icon: Beef,
-    count: 2,
-    items: [
-      { id: 8, name: 'Tavuk Göğsü', amount: '500 g', freshness: 100, icon: Beef, color: 'text-primary', bg: 'bg-primary/20', status: 'Tazelik: %100' },
-      { id: 9, name: 'Somon', amount: '300 g', freshness: 80, icon: Fish, color: 'text-primary', bg: 'bg-primary/20', status: 'Tazelik: %80' },
-    ]
-  }
+const categoryLabels: Record<string, string> = {
+  protein: 'Protein', carb: 'Tahıl ve Karbonhidrat', vegetable: 'Sebze', fruit: 'Meyve', dairy: 'Süt Ürünleri', other: 'Diğer',
 };
 
+function expiryStatus(dateValue: string | null) {
+  if (!dateValue) return { label: 'Tarih yok', color: 'text-slate-400 bg-slate-50' };
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const expiry = new Date(`${dateValue}T00:00:00`);
+  const days = Math.ceil((expiry.getTime() - today.getTime()) / 86400000);
+  if (days < 0) return { label: 'Süresi doldu', color: 'text-rose-600 bg-rose-50' };
+  if (days === 0) return { label: 'Bugün bitiyor', color: 'text-rose-600 bg-rose-50' };
+  if (days <= 3) return { label: `${days} gün kaldı`, color: 'text-orange-600 bg-orange-50' };
+  return { label: `${days} gün kaldı`, color: 'text-primary-hover bg-primary/10' };
+}
+
 export default function Inventory() {
+  const userId = getUserId()!;
+  const [items, setItems] = useState<InventoryItem[]>([]);
+  const [query, setQuery] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState<number | null>(null);
+
+  const load = useCallback(async () => {
+    setLoading(true); setError(null);
+    try { setItems((await apiGetInventory(userId)).items); }
+    catch (err) { setError(err instanceof Error ? err.message : 'Envanter yüklenemedi.'); }
+    finally { setLoading(false); }
+  }, [userId]);
+
+  useEffect(() => { void load(); }, [load]);
+
+  const filtered = useMemo(() => {
+    const normalized = query.trim().toLocaleLowerCase('tr-TR');
+    return normalized ? items.filter((item) => `${item.name} ${item.category}`.toLocaleLowerCase('tr-TR').includes(normalized)) : items;
+  }, [items, query]);
+
+  async function remove(item: InventoryItem) {
+    if (!window.confirm(`${item.name} envanterden silinsin mi?`)) return;
+    setDeleting(item.id);
+    try { await apiDeleteInventory(item.id, userId); setItems((current) => current.filter((value) => value.id !== item.id)); }
+    catch (err) { setError(err instanceof Error ? err.message : 'Ürün silinemedi.'); }
+    finally { setDeleting(null); }
+  }
+
+  if (loading) return <LoadingState label="Envanter yükleniyor..." />;
+  if (error && !items.length) return <ErrorState message={error} onRetry={() => void load()} />;
+
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+  const expiringCount = items.filter((item) => item.expiry_date && expiryStatus(item.expiry_date).color.includes('rose')).length;
+  const summaryCards: Array<{ label: string; value: string | number; icon: LucideIcon; color: string }> = [
+    { label: 'Toplam ürün', value: items.length, icon: PackageOpen, color: 'bg-primary/10 text-primary-hover' },
+    { label: 'Toplam miktar', value: `${Math.round(totalQuantity)} g`, icon: Sparkles, color: 'bg-blue-50 text-blue-600' },
+    { label: 'Süresi dolan', value: expiringCount, icon: AlertTriangle, color: 'bg-rose-50 text-rose-500' },
+  ];
+
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-8 py-8">
-      {/* Header Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-        <div>
-          <h2 className="text-4xl font-black tracking-tight text-text-dark">Envanterim</h2>
-          <p className="text-text-muted-light mt-1 text-base">Mutfaktaki malzemelerinizi yönetin ve tarifler alın.</p>
-        </div>
-        <button className="bg-primary hover:bg-primary-hover text-white flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/30 w-full sm:w-auto">
-          <Plus className="w-5 h-5" />
-          <span>Yeni Malzeme Ekle</span>
-        </button>
+    <div className="space-y-8">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5">
+        <div><p className="text-sm font-bold text-primary-hover">Mutfak yönetimi</p><h1 className="text-4xl font-extrabold tracking-tight">Mutfaktakiler</h1><p className="text-slate-500 mt-2">Evdeki ürünleri, miktarlarını ve son kullanma tarihlerini takip et.</p></div>
+        <Link to="/add-ingredient" className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-primary hover:bg-primary-hover font-bold shadow-lg shadow-primary/20"><Plus className="w-5 h-5" /> Malzeme Ekle</Link>
       </div>
 
-      {/* Search and Filters */}
-      <div className="flex flex-col md:flex-row gap-4 items-center mb-8">
-        <div className="relative flex-1 w-full">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted-light w-5 h-5" />
-          <input
-            className="w-full pl-12 pr-4 py-3 bg-white border-none rounded-xl ring-1 ring-border-light focus:ring-2 focus:ring-primary transition-all text-sm"
-            placeholder="Malzeme ara..."
-            type="text"
-          />
-        </div>
-        <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 no-scrollbar">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              className={clsx(
-                "px-4 py-2 text-sm font-bold rounded-full whitespace-nowrap transition-colors border",
-                cat.active
-                  ? "bg-primary text-white border-primary"
-                  : "bg-white text-text-muted-light border-border-light hover:border-primary"
-              )}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
+      <div className="grid sm:grid-cols-3 gap-4">
+        {summaryCards.map(({ label, value, icon: Icon, color }) => (
+          <div key={label} className="bg-white border border-border-light rounded-2xl p-5 flex items-center gap-4 shadow-sm"><div className={`w-11 h-11 rounded-xl flex items-center justify-center ${color}`}><Icon className="w-5 h-5" /></div><div><p className="text-xs text-slate-500">{label}</p><p className="text-2xl font-black">{value}</p></div></div>
+        ))}
       </div>
 
-      {/* Grid Sections */}
-      <div className="space-y-12">
-        {Object.entries(inventory).map(([key, section]) => {
-          const SectionIcon = section.icon;
-          return (
-            <section key={key}>
-              <div className="flex items-center justify-between mb-4 px-1">
-                <h3 className="text-xl font-bold flex items-center gap-2 text-text-dark">
-                  <SectionIcon className="text-primary w-6 h-6" />
-                  {section.title}
-                </h3>
-                <span className="text-xs font-bold text-text-muted-light bg-border-light px-3 py-1 rounded-full">
-                  {section.count} Ürün
-                </span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {section.items.map((item) => {
-                  const ItemIcon = item.icon;
-                  return (
-                    <div
-                      key={item.id}
-                      className="bg-white p-5 rounded-2xl border border-border-light group hover:shadow-xl transition-all"
-                    >
-                      <div className="flex justify-between items-start mb-4">
-                        <div className={clsx("w-12 h-12 rounded-xl flex items-center justify-center", item.bg, item.color)}>
-                          <ItemIcon className="w-6 h-6" />
-                        </div>
-                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button className="p-1 text-text-muted-light hover:text-primary transition-colors">
-                            <Edit2 className="w-4 h-4" />
-                          </button>
-                          <button className="p-1 text-text-muted-light hover:text-red-500 transition-colors">
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                      <h4 className="font-bold text-lg mb-1 text-text-dark">{item.name}</h4>
-                      <p className="text-text-muted-light text-sm mb-4">
-                        Miktar: <span className="text-text-dark font-bold">{item.amount}</span>
-                      </p>
-                      <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                        <div
-                          className={clsx(
-                            "h-full rounded-full",
-                            item.isCritical ? "bg-red-500" : item.isLow ? "bg-orange-500" : "bg-primary"
-                          )}
-                          style={{ width: `${item.freshness}%` }}
-                        ></div>
-                      </div>
-                      <p
-                        className={clsx(
-                          "text-[10px] text-right mt-1 font-bold uppercase tracking-tighter",
-                          item.isCritical ? "text-red-500" : item.isLow ? "text-orange-500" : "text-text-muted-light"
-                        )}
-                      >
-                        {item.status}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
-      </div>
-
-      {/* Footer Stats / CTA */}
-      <div className="mt-16 bg-border-light rounded-3xl p-8 flex flex-col md:flex-row items-center gap-8 justify-between border border-[#cfe7d7]">
-        <div className="flex items-center gap-6">
-          <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary/20">
-            <Sparkles className="w-8 h-8" />
+      <div className="bg-white border border-border-light rounded-2xl shadow-sm overflow-hidden">
+        <div className="p-5 border-b border-border-light flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <h2 className="font-bold">Envanter Listesi</h2>
+          <div className="relative sm:w-80"><Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Malzeme ara..." className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-primary text-sm" /></div>
+        </div>
+        {error && <p className="m-4 p-3 rounded-xl bg-rose-50 text-rose-600 text-sm font-semibold">{error}</p>}
+        {filtered.length === 0 ? (
+          <div className="py-20 text-center"><PackageOpen className="w-12 h-12 text-slate-300 mx-auto" /><h3 className="font-bold mt-4">{items.length ? 'Aramana uygun ürün yok' : 'Envanterin henüz boş'}</h3><p className="text-sm text-slate-500 mt-1">{items.length ? 'Farklı bir arama yapmayı deneyin.' : 'İlk malzemenizi ekleyerek tarif eşleştirmeyi başlatın.'}</p>{!items.length && <Link to="/add-ingredient" className="inline-flex mt-5 px-4 py-2 bg-primary rounded-lg font-bold text-sm">Malzeme Ekle</Link>}</div>
+        ) : (
+          <div className="divide-y divide-border-light">
+            {filtered.map((item) => {
+              const expiry = expiryStatus(item.expiry_date);
+              return (
+                <div key={item.id} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4 hover:bg-background-light/60 transition-colors">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0"><PackageOpen className="w-5 h-5 text-primary-hover" /></div>
+                  <div className="flex-1 min-w-0"><div className="flex flex-wrap items-center gap-2"><h3 className="font-bold">{item.name}</h3><span className="px-2 py-0.5 rounded-full bg-slate-100 text-[10px] font-bold uppercase text-slate-500">{categoryLabels[item.category] ?? item.category}</span></div><p className="text-sm text-slate-500 mt-1">Yaklaşık {item.calories} kcal</p></div>
+                  <div className="sm:text-right"><p className="font-black text-lg">{Number.isInteger(item.quantity) ? item.quantity : item.quantity.toFixed(1)} g</p><span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${expiry.color}`}><CalendarDays className="w-3 h-3" />{expiry.label}</span></div>
+                  <button disabled={deleting === item.id} onClick={() => void remove(item)} aria-label={`${item.name} ürününü sil`} className="p-3 rounded-xl text-rose-500 hover:bg-rose-50 disabled:opacity-50"><Trash2 className="w-5 h-5" /></button>
+                </div>
+              );
+            })}
           </div>
-          <div>
-            <h4 className="text-xl font-bold text-text-dark">Harika Gözüküyor!</h4>
-            <p className="text-text-muted-light text-sm max-w-sm">
-              Mevcut malzemelerinizle yapılabilecek <span className="text-text-dark font-bold">12 yeni tarif</span> bulundu.
-            </p>
-          </div>
-        </div>
-        <button className="w-full md:w-auto px-8 py-4 bg-text-dark text-white font-bold rounded-2xl hover:scale-105 transition-transform">
-          Tarifleri Gör
-        </button>
+        )}
       </div>
     </div>
   );

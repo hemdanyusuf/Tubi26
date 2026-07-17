@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Bell, User, UtensilsCrossed } from 'lucide-react';
+import { Settings, UtensilsCrossed } from 'lucide-react';
 import { clsx } from 'clsx';
+import { getSessionUser } from '../lib/auth';
 
 interface TopNavProps {
   links: { label: string; path: string }[];
@@ -8,50 +9,25 @@ interface TopNavProps {
 
 export default function TopNav({ links }: TopNavProps) {
   const location = useLocation();
+  const user = getSessionUser();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border-light bg-white/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full border-b border-border-light bg-white/85 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="bg-primary p-1.5 rounded-lg">
-                <UtensilsCrossed className="w-5 h-5 text-white" />
-              </div>
-              <h2 className="text-xl font-extrabold tracking-tight text-text-dark leading-tight hidden sm:block">DiyetApp</h2>
+            <Link to="/dashboard" className="flex items-center gap-3">
+              <div className="bg-primary p-1.5 rounded-lg"><UtensilsCrossed className="w-5 h-5 text-text-dark" /></div>
+              <h2 className="text-xl font-extrabold tracking-tight hidden sm:block">Tubi26</h2>
             </Link>
             <nav className="hidden md:flex items-center gap-6">
-              {links.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={clsx(
-                    'text-sm font-semibold transition-colors',
-                    location.pathname.startsWith(link.path)
-                      ? 'text-primary'
-                      : 'text-slate-600 hover:text-primary'
-                  )}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {links.map((link) => <Link key={link.path} to={link.path} className={clsx('text-sm font-semibold transition-colors', location.pathname.startsWith(link.path) ? 'text-primary-hover' : 'text-slate-600 hover:text-primary-hover')}>{link.label}</Link>)}
             </nav>
           </div>
-          <div className="flex items-center gap-4">
-            <button className="p-2 rounded-full hover:bg-slate-100 text-slate-600 border border-transparent hover:border-slate-200 transition-all">
-              <Bell className="w-5 h-5" />
-            </button>
-            <button className="p-2 rounded-full hover:bg-slate-100 text-slate-600 border border-transparent hover:border-slate-200 transition-all">
-              <User className="w-5 h-5" />
-            </button>
-            <div
-              className="w-8 h-8 rounded-full bg-cover bg-center border border-slate-200 cursor-pointer"
-              style={{
-                backgroundImage:
-                  "url('https://i.pravatar.cc/150?img=32')",
-              }}
-            ></div>
-          </div>
+          <Link to="/onboarding" className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-100" title="Profili düzenle">
+            <div className="hidden sm:block text-right"><p className="text-xs font-bold">{user?.username}</p><p className="text-[10px] text-slate-500">Profili düzenle</p></div>
+            <div className="w-9 h-9 rounded-full bg-background-dark text-primary flex items-center justify-center"><Settings className="w-4 h-4" /></div>
+          </Link>
         </div>
       </div>
     </header>
