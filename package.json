@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "concurrently -k -n API,WEB -c green,cyan \"npm:server\" \"npm:frontend\"",
     "frontend": "vite --port=3000 --host=0.0.0.0",
-    "server": "python backend/app.py",
+    "server": "python -m backend.app",
     "build": "vite build",
-    "start": "python backend/app.py",
+    "start": "python -m backend.app",
     "setup": "npm install && python -m pip install -r requirements.txt",
     "preview": "vite preview",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",

@@ -1,6 +1,14 @@
 # Tubi26 — Akıllı Mutfak ve Beslenme Asistanı
 
+[![CI](https://github.com/hemdanyusuf/Tubi26/actions/workflows/ci.yml/badge.svg)](https://github.com/hemdanyusuf/Tubi26/actions/workflows/ci.yml)
+
 Tubi26, evdeki gıdaları takip eden, mevcut malzemelere göre tarifleri sıralayan ve eksikleri otomatik alışveriş listesine dönüştüren full-stack bir uygulamadır. React arayüzü ile Flask API aynı repository içinde çalışır; uygulama verilerini SQLAlchemy ve SQLite saklar.
+
+## Ekran görüntüleri
+
+| Profil ve hedefler | Takip paneli |
+| --- | --- |
+| ![Tubi26 profil ve hedef ekranı](docs/screenshots/onboarding.png) | ![Tubi26 takip paneli](docs/screenshots/dashboard.png) |
 
 ## Çalışan özellikler
 
@@ -55,9 +63,25 @@ Flask, oluşan `dist/` klasöründeki React uygulamasını ve `/api/*` uçların
 ## Yapı
 
 ```text
-backend/          Flask API, SQLAlchemy modelleri ve seed verileri
-src/              React + TypeScript arayüzü
-requirements.txt  Python bağımlılıkları
+backend/
+├── app.py         Flask uygulama fabrikası ve başlangıç noktası
+├── models.py      SQLAlchemy veri modelleri
+├── routes.py      API ve SPA route'ları
+├── services.py    Doğrulama, serileştirme ve iş kuralları
+└── extensions.py  Paylaşılan Flask uzantıları
+tests/             Pytest API entegrasyon testleri
+src/               React + TypeScript arayüzü
+.github/workflows/ CI test, type-check ve build akışı
+```
+
+## Testler
+
+Backend testleri sağlık kontrolünü, kullanıcı doğrulamasını, envanter akışını, tarif/alışveriş önerilerini ve yerel sohbet fallback'ini kapsar.
+
+```bash
+python -m pytest -q
+npm run lint
+npm run build
 ```
 
 `.env`, yerel SQLite veritabanı ve build çıktıları Git'e eklenmez. Bu uygulama tıbbi tavsiye vermez; kalori değerleri yaklaşık değerlerdir.
